@@ -21,7 +21,7 @@ export const PropertiesPanel = ({
 }: PropertiesPanelProps) => {
   if (!layer) {
     return (
-      <div className="w-80 bg-panel-bg border-l border-border p-6 overflow-y-auto">
+      <div className="w-70 bg-panel-bg overflow-y-auto">
         <div className="text-center text-muted-foreground py-12">
           <p>Select a layer to edit properties</p>
         </div>
@@ -30,7 +30,7 @@ export const PropertiesPanel = ({
   }
 
   return (
-    <div className="w-80 bg-panel-bg border-l border-border p-6 overflow-y-auto space-y-6">
+    <div className="w-70 bg-panel-bg overflow-y-auto space-y-6">
       <div>
         <h3 className="text-sm font-semibold mb-4">Layer Properties</h3>
         

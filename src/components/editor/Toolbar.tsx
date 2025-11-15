@@ -1,26 +1,41 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Type, Image, Square, Circle, Download, Upload } from "lucide-react";
+import { Type, Image, Square, Circle, Layers, Settings, Palette } from "lucide-react";
 import { TextLayer, ImageLayer, ShapeLayer } from "@/types/editor";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { Sidebar, SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 
 interface ToolbarProps {
   onAddText: () => void;
   onAddImage: (src: string) => void;
   onAddShape: (shapeType: "rectangle" | "circle") => void;
-  onRenderVideo: () => void;
-  isRendering: boolean;
-  renderProgress: number;
+  onPanelChange?: (panel: "layers" | "properties" | "colors" | null) => void;
+  onFontPanelToggle?: (show: boolean) => void;
+  onFontSelect?: (font: string) => void;
 }
 
 export const Toolbar = ({
   onAddText,
   onAddImage,
   onAddShape,
-  onRenderVideo,
-  isRendering,
-  renderProgress,
+  onPanelChange,
+  onFontPanelToggle,
+  onFontSelect
 }: ToolbarProps) => {
+  const [activePanel, setActivePanel] = useState<"layers" | "properties" | "colors" | null>(null);
+  const [showFontPanel, setShowFontPanel] = useState(false);
+
+  const handleTextClick = () => {
+    setShowFontPanel(!showFontPanel);
+    onFontPanelToggle?.(!showFontPanel);
+    onAddText();
+  };
+
+  const handlePanelClick = (panel: "layers" | "properties" | "colors") => {
+    const newPanel = activePanel === panel ? null : panel;
+    setActivePanel(newPanel);
+    onPanelChange?.(newPanel);
+  }
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,58 +51,60 @@ export const Toolbar = ({
   };
 
   return (
-    <div className="h-16 bg-card border-b border-border px-4 flex items-center gap-2">
-      <Button variant="outline" size="sm" onClick={onAddText}>
-        <Type className="w-4 h-4 mr-2" />
-        Add Text
-      </Button>
+    <Sidebar collapsible="none" className="w-16">
+      <SidebarGroup>
+        <SidebarMenu className="space-y-2">
+          <SidebarMenuItem onClick={handleTextClick}>
+            <SidebarMenuButton isActive={showFontPanel} title="Add Text">
+              <Type className="w-4 h-4" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem onClick={() => fileInputRef.current?.click()}>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageUpload}
+            />
+            <SidebarMenuButton title="Add Image">
+              <Image className="w-4 h-4" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleImageUpload}
-      />
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => fileInputRef.current?.click()}
-      >
-        <Image className="w-4 h-4 mr-2" />
-        Add Image
-      </Button>
+          <SidebarMenuItem onClick={() => onAddShape("rectangle")}>
+            <SidebarMenuButton title="Rectangle">
+              <Square className="w-4 h-4" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
 
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => onAddShape("rectangle")}
-      >
-        <Square className="w-4 h-4 mr-2" />
-        Rectangle
-      </Button>
+          <SidebarMenuItem onClick={() => onAddShape("circle")}>
+            <SidebarMenuButton title="Circle">
+              <Circle className="w-4 h-4" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
 
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => onAddShape("circle")}
-      >
-        <Circle className="w-4 h-4 mr-2" />
-        Circle
-      </Button>
+          <Separator className="my-2" />
 
-      <Separator orientation="vertical" className="h-8 mx-2" />
+          <SidebarMenuItem onClick={() => handlePanelClick("layers")}>
+            <SidebarMenuButton isActive={activePanel === "layers"} title="Layers">
+              <Layers className="w-4 h-4" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
 
-      <Button
-        onClick={onRenderVideo}
-        disabled={isRendering}
-        className="ml-auto"
-      >
-        <Download className="w-4 h-4 mr-2" />
-        {isRendering
-          ? `Rendering ${Math.round(renderProgress * 100)}%`
-          : "Render Video"}
-      </Button>
-    </div>
+          <SidebarMenuItem onClick={() => handlePanelClick("properties")}>
+            <SidebarMenuButton isActive={activePanel === "properties"} title="Properties">
+              <Settings className="w-4 h-4" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem onClick={() => handlePanelClick("colors")}>
+            <SidebarMenuButton isActive={activePanel === "colors"} title="Colors">
+              <Palette className="w-4 h-4" />
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroup>
+    </Sidebar>
   );
 };

@@ -60,8 +60,20 @@ export const EditorCanvas = ({
 }: EditorCanvasProps) => {
   const transformerRef = useRef<Konva.Transformer>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const stageContainerRef = useRef<HTMLDivElement>(null);
 
-  const scale = 0.7; // Scale for preview
+  // Get full screen dimensions
+  const getStageSize = () => {
+    if (stageContainerRef.current) {
+      return {
+        width: stageContainerRef.current.clientWidth,
+        height: stageContainerRef.current.clientHeight,
+      };
+    }
+    return { width: width, height: height };
+  };
+
+  const stageSize = getStageSize();
 
   useEffect(() => {
     if (!transformerRef.current || !stageRef.current) return;
@@ -193,27 +205,26 @@ export const EditorCanvas = ({
   };
 
   return (
-    <div ref={containerRef} className="flex items-center justify-center bg-canvas-bg rounded-lg p-4">
-      <div className="relative" style={{ width: width * scale, height: height * scale }}>
-        <Stage
-          width={width}
-          height={height}
-          scaleX={scale}
-          scaleY={scale}
-          ref={stageRef}
-          className="bg-muted rounded shadow-lg"
-          onMouseDown={(e) => {
-            if (e.target === e.target.getStage()) {
-              onLayerSelect(null);
-            }
-          }}
-        >
-          <KonvaLayer>
-            {layers.map((layer) => renderLayer(layer))}
-            <Transformer ref={transformerRef} />
-          </KonvaLayer>
-        </Stage>
-      </div>
+    <div 
+      ref={stageContainerRef}
+      className="w-full h-full flex items-center justify-center bg-muted"
+    >
+      <Stage
+        width={stageSize.width}
+        height={stageSize.height}
+        ref={stageRef}
+        className="!rounded-none"
+        onMouseDown={(e) => {
+          if (e.target === e.target.getStage()) {
+            onLayerSelect(null);
+          }
+        }}
+      >
+        <KonvaLayer>
+          {layers.map((layer) => renderLayer(layer))}
+          <Transformer ref={transformerRef} />
+        </KonvaLayer>
+      </Stage>
     </div>
   );
 };

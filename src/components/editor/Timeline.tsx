@@ -36,7 +36,7 @@ export const Timeline = ({
   };
 
   return (
-    <div className="h-64 bg-timeline-bg border-t border-border p-4 space-y-4">
+    <div className="bg-timeline-bg border-t border-border p-2 space-y-4">
       <div className="flex items-center gap-4">
         <div className="flex gap-2">
           {!isPlaying ? (
@@ -54,7 +54,7 @@ export const Timeline = ({
         </div>
 
         <div className="flex-1 flex items-center gap-4">
-          <span className="text-sm font-mono text-muted-foreground min-w-[80px]">
+          <span className="text-sm font-mono text-muted-foreground">
             {formatTime(currentTime)}
           </span>
           <Slider
@@ -71,7 +71,7 @@ export const Timeline = ({
         </div>
       </div>
 
-      <div className="space-y-2 overflow-y-auto max-h-40">
+      <div className="space-y-2 overflow-y-auto h-[13vh]">
         {layers.map((layer) => (
           <div
             key={layer.id}
