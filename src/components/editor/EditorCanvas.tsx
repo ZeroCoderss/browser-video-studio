@@ -14,7 +14,19 @@ interface EditorCanvasProps {
   height: number;
 }
 
-const LayerImage = ({ layer }: { layer: ImageLayer }) => {
+const LayerImage = ({ 
+  layer, 
+  onSelect,
+  onDragEnd,
+  onTransformEnd,
+  locked 
+}: { 
+  layer: ImageLayer;
+  onSelect: () => void;
+  onDragEnd: (e: Konva.KonvaEventObject<DragEvent>) => void;
+  onTransformEnd: (e: Konva.KonvaEventObject<Event>) => void;
+  locked?: boolean;
+}) => {
   const [image] = useImage(layer.src);
   return (
     <Image
@@ -27,8 +39,12 @@ const LayerImage = ({ layer }: { layer: ImageLayer }) => {
       scaleY={layer.scaleY || 1}
       rotation={layer.rotation || 0}
       opacity={layer.opacity ?? 1}
-      draggable
+      draggable={!locked}
       id={layer.id}
+      onDragEnd={onDragEnd}
+      onTransformEnd={onTransformEnd}
+      onClick={onSelect}
+      onTap={onSelect}
     />
   );
 };
@@ -119,7 +135,16 @@ export const EditorCanvas = ({
 
       case "image": {
         const imageLayer = layer as ImageLayer;
-        return <LayerImage key={layer.id} layer={imageLayer} />;
+        return (
+          <LayerImage 
+            key={layer.id} 
+            layer={imageLayer}
+            onSelect={() => onLayerSelect(layer.id)}
+            onDragEnd={commonProps.onDragEnd}
+            onTransformEnd={commonProps.onTransformEnd}
+            locked={layer.locked}
+          />
+        );
       }
 
       case "shape": {
