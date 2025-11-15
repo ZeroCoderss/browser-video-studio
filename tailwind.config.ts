@@ -13,6 +13,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -57,6 +60,19 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        canvas: {
+          bg: "hsl(var(--canvas-bg))",
+        },
+        timeline: {
+          bg: "hsl(var(--timeline-bg))",
+        },
+        panel: {
+          bg: "hsl(var(--panel-bg))",
+        },
+        layer: {
+          bar: "hsl(var(--layer-bar))",
+        },
+        playhead: "hsl(var(--playhead))",
       },
       borderRadius: {
         lg: "var(--radius)",
