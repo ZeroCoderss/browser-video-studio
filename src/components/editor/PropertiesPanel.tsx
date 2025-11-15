@@ -1,10 +1,10 @@
-import { Layer, TextLayer, ShapeLayer } from "@/types/editor";
+import { Layer, TextLayer, ShapeLayer, ImageLayer } from "@/types/editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Copy } from "lucide-react";
+import { Trash2, Copy, Maximize2, Minimize2 } from "lucide-react";
 
 interface PropertiesPanelProps {
   layer: Layer | undefined;
@@ -59,6 +59,30 @@ export const PropertiesPanel = ({
 
               <div>
                 <Label className="text-xs text-muted-foreground">Font Size</Label>
+                <div className="flex gap-2 mt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      const currentSize = (layer as TextLayer).fontSize || 32;
+                      onLayerUpdate(layer.id, { fontSize: Math.max(12, currentSize - 10) } as Partial<TextLayer>);
+                    }}
+                  >
+                    <Minimize2 className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      const currentSize = (layer as TextLayer).fontSize || 32;
+                      onLayerUpdate(layer.id, { fontSize: Math.min(200, currentSize + 10) } as Partial<TextLayer>);
+                    }}
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                  </Button>
+                </div>
                 <Slider
                   value={[(layer as TextLayer).fontSize || 32]}
                   onValueChange={([value]) =>
@@ -88,8 +112,89 @@ export const PropertiesPanel = ({
             </>
           )}
 
+          {layer.type === "image" && (
+            <>
+              <div>
+                <Label className="text-xs text-muted-foreground">Image Size</Label>
+                <div className="flex gap-2 mt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      const currentWidth = (layer as ImageLayer).width || 200;
+                      const currentHeight = (layer as ImageLayer).height || 200;
+                      onLayerUpdate(layer.id, {
+                        width: Math.max(50, currentWidth * 0.8),
+                        height: Math.max(50, currentHeight * 0.8),
+                      } as Partial<ImageLayer>);
+                    }}
+                  >
+                    <Minimize2 className="w-4 h-4 mr-2" />
+                    Smaller
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      const currentWidth = (layer as ImageLayer).width || 200;
+                      const currentHeight = (layer as ImageLayer).height || 200;
+                      onLayerUpdate(layer.id, {
+                        width: Math.min(1280, currentWidth * 1.25),
+                        height: Math.min(720, currentHeight * 1.25),
+                      } as Partial<ImageLayer>);
+                    }}
+                  >
+                    <Maximize2 className="w-4 h-4 mr-2" />
+                    Larger
+                  </Button>
+                </div>
+                <div className="text-xs text-muted-foreground mt-2">
+                  {Math.round((layer as ImageLayer).width || 200)} × {Math.round((layer as ImageLayer).height || 200)}px
+                </div>
+              </div>
+            </>
+          )}
+
           {layer.type === "shape" && (
             <>
+              <div>
+                <Label className="text-xs text-muted-foreground">Shape Size</Label>
+                <div className="flex gap-2 mt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      const currentWidth = (layer as ShapeLayer).width || 200;
+                      const currentHeight = (layer as ShapeLayer).height || 200;
+                      onLayerUpdate(layer.id, {
+                        width: Math.max(20, currentWidth * 0.8),
+                        height: Math.max(20, currentHeight * 0.8),
+                      } as Partial<ShapeLayer>);
+                    }}
+                  >
+                    <Minimize2 className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      const currentWidth = (layer as ShapeLayer).width || 200;
+                      const currentHeight = (layer as ShapeLayer).height || 200;
+                      onLayerUpdate(layer.id, {
+                        width: Math.min(1280, currentWidth * 1.25),
+                        height: Math.min(720, currentHeight * 1.25),
+                      } as Partial<ShapeLayer>);
+                    }}
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+
               <div>
                 <Label className="text-xs text-muted-foreground">Fill Color</Label>
                 <Input
