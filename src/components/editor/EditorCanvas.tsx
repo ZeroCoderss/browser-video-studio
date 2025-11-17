@@ -62,6 +62,9 @@ export const EditorCanvas = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const stageContainerRef = useRef<HTMLDivElement>(null);
 
+  console.log("EditorCanvas render");
+  console.log("layers:", layers);
+
   // Get full screen dimensions
   const getStageSize = () => {
     if (stageContainerRef.current) {

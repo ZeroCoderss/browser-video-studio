@@ -1,7 +1,8 @@
-import { Layer } from "@/types/editor";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, Square } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
+import { CanvasTimeline } from "./CanvasTimeline";
+import { Layer } from "@/types/editor";
 
 interface TimelineProps {
   layers: Layer[];
@@ -13,6 +14,7 @@ interface TimelineProps {
   onStop: () => void;
   onSeek: (time: number) => void;
   onLayerSelect: (id: string) => void;
+  onLayerChange: (layer: Layer) => void;
 }
 
 export const Timeline = ({
@@ -25,6 +27,7 @@ export const Timeline = ({
   onStop,
   onSeek,
   onLayerSelect,
+  onLayerChange,
 }: TimelineProps) => {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -37,6 +40,7 @@ export const Timeline = ({
 
   return (
     <div className="bg-timeline-bg border-t border-border p-2 space-y-4">
+      {/* Controls */}
       <div className="flex items-center gap-4">
         <div className="flex gap-2">
           {!isPlaying ? (
@@ -57,50 +61,30 @@ export const Timeline = ({
           <span className="text-sm font-mono text-muted-foreground">
             {formatTime(currentTime)}
           </span>
+
           <Slider
             value={[currentTime]}
-            onValueChange={([value]) => onSeek(value)}
+            onValueChange={([v]) => onSeek(v)}
             min={0}
             max={duration}
             step={0.01}
             className="flex-1"
           />
-          <span className="text-sm font-mono text-muted-foreground min-w-[80px]">
+
+          <span className="text-sm font-mono min-w-[80px] text-muted-foreground">
             {formatTime(duration)}
           </span>
         </div>
       </div>
-
-      <div className="space-y-2 overflow-y-auto h-[13vh]">
-        {layers.map((layer) => (
-          <div
-            key={layer.id}
-            className="flex items-center gap-2 p-2 bg-muted rounded cursor-pointer hover:bg-muted/80 transition-smooth"
-            onClick={() => onLayerSelect(layer.id)}
-          >
-            <div className="text-xs font-medium min-w-[100px] truncate">
-              {layer.name}
-            </div>
-            <div className="flex-1 relative h-8 bg-secondary rounded">
-              <div
-                className="absolute top-0 left-0 h-full bg-layer-bar rounded"
-                style={{
-                  left: `${(layer.startTime / duration) * 100}%`,
-                  width: `${((layer.endTime - layer.startTime) / duration) * 100}%`,
-                }}
-              />
-            </div>
-            <div className="text-xs text-muted-foreground min-w-[60px] text-right">
-              {formatTime(layer.startTime)} - {formatTime(layer.endTime)}
-            </div>
-          </div>
-        ))}
-        {layers.length === 0 && (
-          <div className="text-center text-muted-foreground py-8">
-            <p className="text-sm">No layers yet. Add some elements to get started!</p>
-          </div>
-        )}
-      </div>
+      {/* Canvas Timeline */}
+      <CanvasTimeline
+        duration={duration}
+        currentTime={currentTime}
+        layers={layers}
+        onSeek={onSeek}
+        onLayerSelect={onLayerSelect}
+        onLayerChange={onLayerChange}
+      />
     </div>
   );
 };

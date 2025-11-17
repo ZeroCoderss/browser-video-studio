@@ -4,8 +4,9 @@ import { useAnimationEngine } from "@/hooks/useAnimationEngine";
 import { useTimeline } from "@/hooks/useTimeline";
 import { useRenderer } from "@/hooks/useRenderer";
 import { EditorCanvas } from "@/components/editor/EditorCanvas";
-import { PropertiesPanel } from "@/components/editor/PropertiesPanel";
-import { Timeline } from "@/components/editor/Timeline";
+import PropertiesPanel from "@/components/editor/properties-panel";
+// import Timeline from "@/components/editor/timeline";
+import { Timeline } from "@/components/editor/timeline";
 import { Toolbar } from "@/components/editor/Toolbar";
 import { TextLayer, ImageLayer, ShapeLayer, Animation } from "@/types/editor";
 import { toast } from "sonner";
@@ -130,7 +131,7 @@ const Index = () => {
 
       setRenderStatus("success");
       toast.success("Video rendered and downloaded successfully!");
-      
+
       // Auto-close success modal after 3 seconds
       setTimeout(() => setRenderStatus("idle"), 3000);
     } catch (error) {
@@ -220,15 +221,13 @@ const Index = () => {
 
             {/* Mobile Properties Drawer */}
             <div
-              className={`fixed md:hidden inset-0 z-50 transition-all duration-300 ${
-                showPropertiesPanel ? "visible" : "invisible"
-              }`}
+              className={`fixed md:hidden inset-0 z-50 transition-all duration-300 ${showPropertiesPanel ? "visible" : "invisible"
+                }`}
             >
               <div className="absolute inset-0 bg-black/50" onClick={() => setShowPropertiesPanel(false)} />
               <div
-                className={`absolute right-0 top-0 bottom-0 w-80 bg-card border-l border-border transform transition-transform duration-300 ${
-                  showPropertiesPanel ? "translate-x-0" : "translate-x-full"
-                } overflow-y-auto`}
+                className={`absolute right-0 top-0 bottom-0 w-80 bg-card border-l border-border transform transition-transform duration-300 ${showPropertiesPanel ? "translate-x-0" : "translate-x-full"
+                  } overflow-y-auto`}
               >
                 <div className="flex items-center justify-between p-3 border-b border-border sticky top-0 bg-card z-10">
                   <h2 className="font-semibold text-sm">Properties</h2>
@@ -263,6 +262,7 @@ const Index = () => {
               onStop={stop}
               onSeek={seek}
               onLayerSelect={setSelectedLayerId}
+              onLayerChange={(l) => updateLayer(l.id, l)}
             />
           </div>
         </div>
@@ -312,6 +312,7 @@ const Index = () => {
                   onStop={stop}
                   onSeek={seek}
                   onLayerSelect={setSelectedLayerId}
+                  onLayerChange={(l) => updateLayer(l.id, l)}
                 />
               </div>
             </div>

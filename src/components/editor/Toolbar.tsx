@@ -51,7 +51,7 @@ export const Toolbar = ({
   };
 
   return (
-    <Sidebar collapsible="none" className="w-16">
+    <Sidebar collapsible="none" className="w-13">
       <SidebarGroup>
         <SidebarMenu className="space-y-2">
           <SidebarMenuItem onClick={handleTextClick}>
