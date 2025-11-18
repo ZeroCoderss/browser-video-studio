@@ -18,11 +18,11 @@ export const CanvasTimeline = ({
   onLayerSelect,
   onLayerChange,
 }: CanvasTimelineProps) => {
-  const PX_PER_SECOND = 120;
+  const PX_PER_SECOND = 140;
   const width = duration * PX_PER_SECOND;
 
   return (
-    <div className="w-full h-[160px] overflow-x-auto bg-neutral-900 rounded">
+    <div className="w-full h-[160px] overflow-x-auto bg-neutral-900 rounded flex justify-center">
       <Stage width={width} height={160}>
         <KonvaLayer>
           {/* Playhead */}
@@ -33,7 +33,7 @@ export const CanvasTimeline = ({
           />
 
           {/* Second grid lines */}
-          {Array.from({ length: Math.ceil(duration) }).map((_, i) => (
+          {Array.from({ length: Math.ceil(duration+1) }).map((_, i) => (
             <Line
               key={`grid-${i}`}
               points={[i * PX_PER_SECOND, 0, i * PX_PER_SECOND, 160]}

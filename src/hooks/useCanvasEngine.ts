@@ -5,7 +5,7 @@ import { Layer, EditorTemplate } from "@/types/editor";
 export const useCanvasEngine = () => {
   const [template, setTemplate] = useState<EditorTemplate>({
     duration: 10,
-    width: 1280,
+    width: 880,
     height: 720,
     fps: 30,
     layers: [],
